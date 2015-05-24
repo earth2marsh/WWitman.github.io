@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>How controllers are specified in the Swagger file</title>
+  <meta name="description" content="Documentation site for Apigee API Studio.
+">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/pages/controllers.html">
+  <link rel="alternate" type="application/rss+xml" title="Apigee API Studio" href="http://yourdomain.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="http://apistudio.io/">Apigee API Studio</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+          <a class="page-link" href="../index.html">Contents</a>
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">How controllers are specified in the Swagger file</h1>
+  </header>
+
+  <article class="post-content">
+    <h1 id="add-controller-logic-to-your-api">Add controller logic to your API</h1>
+
+<p>After downloading the sample project from Apigee API Studio, the first thing to do to get a functioning API up and running is to <strong>write a controller</strong>.</p>
+
+<p>A controller is a Node.js implementation with functions that execute when an API path is called. So, for a “hello world” API, you’ll need a controller function that returns “Hello, World!” when you call the API. This topic explains how.</p>
+
+<h1 id="how-controllers-are-specified-in-the-swagger-file">How controllers are specified in the Swagger file</h1>
+
+<p>You can see immediately how the controller is specified on the <code>/hello</code> path by looking at the project’s Swagger file:</p>
+
+<div class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span class="l-Scalar-Plain">paths</span><span class="p-Indicator">:</span>
+      <span class="l-Scalar-Plain">/hello</span><span class="p-Indicator">:</span>
+        <span class="l-Scalar-Plain">x-swagger-router-controller</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello_world</span>
+        <span class="l-Scalar-Plain">get</span><span class="p-Indicator">:</span>
+          <span class="l-Scalar-Plain">description</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Returns greetings to the caller</span>
+          <span class="l-Scalar-Plain">operationId</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">hello</span></code></pre></div>
+
+<p>The extension <code>x-swagger-router-controller</code> specifies the name of the Node.js controller file associated with the <code>/hello</code> path. And the <code>operationId</code> specifies the name of a function to call in that file when <code>/hello</code> is called.</p>
+
+<h1 id="where-controller-files-are-located">Where controller files are located</h1>
+
+<p>Controller files are always located in a <code>swagger-node</code> project in the directory <code>&lt;project-root&gt;/api/controllers</code>.</p>
+
+<p>For example: <code>&lt;project-root&gt;/api/controllers/hello_world.js</code></p>
+
+<p><strong>Note:</strong> In the Swagger file, the name of the controller is given without a <code>.js</code> extension.</p>
+
+<h1 id="try-it">Try it</h1>
+
+<p>Let’s add a “hello world” controller and call the API.</p>
+
+<p>Remember: According to the Swagger file, the API’s <code>/hello</code> path executes the <code>hello()</code> method in the controller file called <code>hello_world.js</code>.</p>
+
+<ol>
+  <li>Before we add the controller, we need to make a small adjustment to the Swagger file. In an editor, open <code>&lt;project-root&gt;/api/swagger/swagger.yaml</code>.</li>
+  <li>
+    <p>Edit the <code>basePath</code> element, like this, with just a single slash:</p>
+
+    <p><code>basePath: /</code></p>
+  </li>
+  <li>Save the Swagger file.</li>
+  <li>In an editor, create the file <code>&lt;project-root&gt;/api/controllers/hello_world.js</code></li>
+  <li>
+    <p>Copy this code into the file:</p>
+
+    <pre><code>   var util = require('util');
+
+   module.exports = {
+     hello: hello
+   };
+
+   function hello(req, res) {
+     var hello = "Hello, World!";
+     res.json(hello);
+   }
+</code></pre>
+  </li>
+  <li>Save the file.</li>
+  <li>In a terminal window, CD to the project’s root folder.</li>
+  <li>
+    <p>Use <code>npm</code> to install the dependencies for the project:`</p>
+
+    <p>npm install`</p>
+  </li>
+  <li>
+    <p>Start the project: `</p>
+
+    <p>swagger project start`</p>
+  </li>
+  <li>In another terminal, call the <code>/hello</code> API: `</li>
+</ol>
+
+<pre><code>curl -i http://localhost:10010/hello` `Hello, World!`
+</code></pre>
+
+<p>You’ve created a simple controller that executes when your API path is called.</p>
+
+<h1 id="specify-input-with-a-query-parameter">Specify input with a query parameter</h1>
+
+<p>Let’s add a query parameter to the API. We’ll use it to pass in a name.</p>
+
+<p><strong>Step 1:</strong> Add the <code>parameters</code> element to the Swagger file:</p>
+
+<pre><code>  paths:
+    /hello:
+      x-swagger-router-controller: hello_world
+      get:
+        description: Returns greetings to the caller
+        operationId: hello
+        parameters:
+          - name: name
+            in: query
+            description: The name of the person to whom to say hello
+            required: false
+            type: string
+</code></pre>
+
+<p><strong>Step 2:</strong> Add controller code to handle the query parameter. Open the <code>hello_world.js</code> file and replace the contents with this code:</p>
+
+<pre><code>      var util = require('util');
+
+      module.exports = {
+        hello: hello
+      };
+
+      function hello(req, res) {
+        var name = req.swagger.params.name.value;
+        var hello = name ? util.format('Hello, %s', name) : 'Hello, stranger!';
+        res.json(hello);
+      }
+</code></pre>
+
+<p><strong>Step 3:</strong> Call the API</p>
+
+<p>Now, when you call the API and pass in a <code>?name</code> query param, the name is echoed back.</p>
+
+<p><code>curl http://localhost:10010/hello?name=Scott</code> `<br />
+Hello, Scott`</p>
+
+<p><strong>Note:</strong> We use the <code>req.swagger</code> object to obtain access to the query parameter value. This object is populated by a middleware component called <code>swagger-tools</code>. To read more, see the <a href="https://github.com/apigee-127/swagger-tools/blob/master/docs/Middleware.md">Swagger tools middleware documentation</a>.</p>
+
+<h1 id="next-step">Next step</h1>
+
+<p>Read more about implementing controllers in the <a href="https://github.com/theganyo/swagger-node/tree/master/docs">swagger-node documentation</a>.</p>
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+  <p> <a href="https://community.apigee.com"><img border="0" alt="Ask questions on the Apigee Community" src="../images/apigee-community.png/"></a></p>
+
+  </div>
+</footer>
+
+
+  </body>
+
+</html>
