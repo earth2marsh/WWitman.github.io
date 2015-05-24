@@ -3,9 +3,12 @@ layout: page
 title: About the project menu
 ---
 
+* [Getting stuff into your project](#into)
+* [Downloading stuff from your project](#outof)
+
 ![alt text](../images/project-menu.png)
 
-# Getting stuff into your project
+# <a name="into"></a>Getting stuff into your project
 
 * **New** -- Creates a new project with a new base path. By default, the new project is a "hello world" API. 
 
@@ -17,7 +20,7 @@ title: About the project menu
 
 * **Import File** -- Import Swagger JSON from a file. The JSON is immediately validated when you import it. 
 
-# Downloading stuff from your project
+# <a name="outof"></a>Downloading stuff from your project
 
 * **Download YAML** -- Download the Swagger model to a file in YAML format. 
 
